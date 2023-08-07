@@ -1,0 +1,6 @@
+ports:
+  - port: 8080
+    visibility: public
+tasks:
+  - init: sdk install java 17.0.8-oracle < /dev/null
+image: gitpod/workspace-mysql
