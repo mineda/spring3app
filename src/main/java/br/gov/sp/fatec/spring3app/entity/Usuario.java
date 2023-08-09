@@ -1,10 +1,16 @@
 package br.gov.sp.fatec.spring3app.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,9 +28,19 @@ public class Usuario {
     @Column(name = "usr_senha")
     private String senha;
 
-    public Usuario() {}
+    @ManyToMany
+    @JoinTable(name = "uau_usuario_autorizacao",
+        joinColumns = { @JoinColumn(name = "usr_id")},
+        inverseJoinColumns = { @JoinColumn(name = "aut_id") }
+        )
+    private List<Autorizacao> autorizacoes;
+
+    public Usuario() {
+        autorizacoes = new ArrayList<Autorizacao>();
+    }
 
     public Usuario(String nome, String senha) {
+        this();
         this.nome = nome;
         this.senha = senha;
     }
@@ -51,6 +67,14 @@ public class Usuario {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public List<Autorizacao> getAutorizacoes() {
+        return autorizacoes;
+    }
+
+    public void setAutorizacoes(List<Autorizacao> autorizacoes) {
+        this.autorizacoes = autorizacoes;
     }
    
 }
