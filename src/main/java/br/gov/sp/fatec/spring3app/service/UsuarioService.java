@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.gov.sp.fatec.spring3app.entity.Autorizacao;
 import br.gov.sp.fatec.spring3app.entity.Usuario;
@@ -29,12 +30,12 @@ public class UsuarioService implements IUsuarioService {
     //@PreAuthorize("hasRole('ADMIN')")
     public Usuario novoUsuario(Usuario usuario) {
         if(usuario == null ||
-                usuario.getAutorizacoes().isEmpty() ||
+                usuario.getAutorizacoes() == null ||
                 usuario.getNome() == null ||
                 usuario.getNome().isBlank() ||
                 usuario.getSenha() == null ||
                 usuario.getSenha().isBlank()) {
-            throw new RuntimeException("Dados invalidos para usuario!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dados invalidos para usuario!");
         }
         List<Autorizacao> autorizacoes = new ArrayList<Autorizacao>();
         for(Autorizacao aut: usuario.getAutorizacoes()) {
@@ -45,7 +46,7 @@ public class UsuarioService implements IUsuarioService {
             else {
                 Optional<Autorizacao> autOp = autorizacaoRepo.findById(aut.getId());
                 if(autOp.isEmpty()) {
-                    throw new RuntimeException("Autorizacao com id " + aut.getId() + " nao encontrada!");
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Autorizacao com id " + aut.getId() + " nao encontrada!");
                 }
                 nova = autOp.get();
             }
@@ -58,12 +59,12 @@ public class UsuarioService implements IUsuarioService {
 
     private Autorizacao novaAutorizacao(Autorizacao aut) {
         if(aut.getNome() == null || aut.getNome().isBlank()) {
-            throw new RuntimeException("Dados invalidos para autorizacao!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dados invalidos para autorizacao!");
         }
         return autorizacaoRepo.save(aut);
     }
 
-    @PreAuthorize("isAuthenticated")
+    //@PreAuthorize("isAuthenticated")
     public List<Usuario> todosUsuarios() {
         return usuarioRepo.findAll();
     }
@@ -71,7 +72,7 @@ public class UsuarioService implements IUsuarioService {
     public Usuario buscarPorId(Long id) {
         Optional<Usuario> usuarioOp = usuarioRepo.findById(id);
         if(usuarioOp.isEmpty()) {
-            throw new RuntimeException("Usuario não encontrado");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado");
         }
         return usuarioOp.get();
     }
