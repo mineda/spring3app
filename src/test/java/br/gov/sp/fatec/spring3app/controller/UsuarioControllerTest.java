@@ -1,8 +1,9 @@
 package br.gov.sp.fatec.spring3app.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,6 +33,7 @@ public class UsuarioControllerTest {
     private UsuarioService service;
 
     @Test
+    //Utilizado para simular um usuário autenticado com a role ADMIN
     @WithMockUser(roles = {"ADMIN"})
     public void novoUsuarioTestOk() throws Exception {
         Usuario usuario = new Usuario("TesteMvc", "senha");
@@ -40,7 +42,10 @@ public class UsuarioControllerTest {
 
         mvc.perform(post("/usuario")
             .content("{\"nome\":\"TesteMvc\", \"senha\":\"senha\"}")
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON)
+            // Para o @WebMvcTest, o Spring Security não carrega o arquivo de configuração personalizado. 
+            // Por conta disso, é necessário enviar um csrf em cada POST (padrão do Spring Security)
+            .with(csrf()))
             .andDo(print())
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(1L))
