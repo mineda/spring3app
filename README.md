@@ -7,7 +7,7 @@ Aplicação backend usando Spring Boot 3, Spring Data JPA, Spring Web, Spring Se
 ## Setup
 
 Crie o Banco de Dados usando o arquivo DDL.sql
-No terminal: mysql < DDL.sql
+No terminal use o comando: mysql < DDL.sql
 
 ## Execução
 
