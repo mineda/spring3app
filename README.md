@@ -1,6 +1,6 @@
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/mineda/spring3app)
 
-# Backend com Spring Boot 3
+# Exemplo de backend com Spring Boot 3
 
 Aplicação backend usando Spring Boot 3
 
