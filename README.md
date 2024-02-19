@@ -2,7 +2,7 @@
 
 # Exemplo de backend com Spring Boot 3
 
-Aplicação backend usando Spring Boot 3
+Aplicação backend usando Spring Boot 3, Spring Data JPA, Spring Web, Spring Security com JWT e SGBD MySQL
 
 ## Setup
 
